@@ -1,14 +1,75 @@
-This is a complete example of how to use GLSurfaceView and native code to draw
-old-skool pixel buffer graphics on the Android platform.  It is related to this
-[blog post][] about the Android NDK.
+##<http://m-soft.meteor.com/#3dxuewei>##
 
-The build tool used is [SCons][]. To compile the code, run
-as follows:
-
-    scons ANDROID_NDK=/path/to/android-ndk-r4b ANDROID_SDK=/path/to/android-sdk-linux_86
-
-The ANDROID_NDK and ANDROID_SDK variables are cached for future runs.
+##穴位数据说明##
 
 
-[blog post]: http://quirkygba.blogspot.com/2010/10/android-native-coding-in-c.html
-[SCons]: http://www.scons.org
+感谢 lhdx_lee（lhdx_lee@163.com）提供第一版数据。
+
+我在此基础上进行了修改以及增加两条经络。
+
+修改assets下的xwsj.lj可以更改穴位数据。目前穴位数据的format为：
+
+```
+
+"%f %f %f %f %f %f %f %f %d %s %s %d %s %s %s %s"
+world_x ： 穴位的x坐标
+world_y ： 穴位的y坐标
+world_z ： 穴位的z坐标
+mx
+my
+dx
+jiaodu_x  ： 穴位的x旋转
+jiaodu_y  ： 穴位的y旋转
+xuewei_id ： 穴位的ID 目前是1到361
+xuewei_ename ：穴位的拼音名字
+xuewei_cname ： 穴位的中文名字
+jingluo_id ： 经络的ID 目前是1到14  12经+任督
+jingluo_cname：经络的名字
+shiyi          ：穴位的释义
+gongneng  ： 穴位的功能
+weizhi	：穴位的位置
+
+```
+
+
+##代码说明##
+
+```
+assets/...  全部资源部分。包含图片、模型、字体、穴位数据等。其中xwsj.lj文件是穴位数据文件。
+src/...    Android部分Java代码，包含GLSurfaceView 、GLES2.0 Render初始化、.多点触控处理等代码。
+jni/*   C++部分代码。用于生成libmglxuewei.so。
+jni/scene/xuewei  整体场景部分代码。分为三个类。3dxuewei是场景类。主要是场景显示和事件处理。3dxueweiLogic是场景各部分加载以及部分逻辑封装。xueweiLoader是加载类，用于把外部的穴位数据文件导入成3D节点和转换为opengl坐标系。
+```
+
+
+##软件说明##
+
+##v1.1更新：##
+
+修复了部分复杂汉字无法显示的问题
+增加了任脉督脉的穴位。目前共支持14个经络共361个穴位的显示和说明。
+
+###功能特点：###
+
+1. 通过3D方式展示人体所有穴位、可查看3D经络连线
+2. 通过不同颜色展示不同经络
+3. 可动态旋转缩放人体模型，支持多点触控
+4. 选中穴位有穴位具体说明
+
+###注意事项：###
+
+1. 每个人体能特征不一致。所以具体穴位在不同人身上可能有细微差别。
+所以这个只能当成一个参考。穴位释义和位置等通过网络查询所得。
+不能保证绝对准确。
+2. 本软件不含任何广告，不需要特殊权限。不含任何恶意代码。
+3. 本软件需要手机支持GLES2.0才能使用（绝大部分都是支持的）。
+4. Windows版也可以联系获取
+
+###操作说明：###
+
+* 单指拖动触发人物旋转
+* 双指距离拉缩触发人物放大缩小
+* 双指等距离平移触发人物平移 
+* 皮肤选项可以显示人体/显示经络连线
+* Open选项可以显示单条经络显示
+* 点击穴位则显示该穴位信息
